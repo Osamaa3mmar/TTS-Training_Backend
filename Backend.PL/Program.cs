@@ -1,6 +1,11 @@
 
+using Backend.BLL.Services.Classes;
+using Backend.BLL.Services.Interfaces;
 using Backend.DAL.Data;
+using Backend.DAL.Repository.Classes;
+using Backend.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 namespace Backend.PL
 {
@@ -23,8 +28,10 @@ namespace Backend.PL
             builder.Services.AddDbContext<ApplicationDbContext>(op=>op.UseSqlServer(builder.Configuration.GetConnectionString("MyConn")));
 
 
-
-
+            //repositories
+            builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
+            //services
+            builder.Services.AddScoped<ICategoryService,CategoryService>(); 
 
 
             var app = builder.Build();
@@ -32,6 +39,7 @@ namespace Backend.PL
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference();
             }
 
             app.UseHttpsRedirection();

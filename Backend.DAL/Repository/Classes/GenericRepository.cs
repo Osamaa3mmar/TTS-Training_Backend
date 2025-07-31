@@ -1,5 +1,6 @@
 ﻿using Backend.DAL.Data;
 using Backend.DAL.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,38 @@ namespace Backend.DAL.Repository.Classes
             this.context = context;
         }
 
+        public async Task<int> AddAsync(TEntity entity)
+        {
+           await context.Set<TEntity>().AddAsync(entity);
+           return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteAllAsync(IEnumerable<TEntity> entities)
+        {
+            context.Set<TEntity>().RemoveRange(entities);
+            return await context.SaveChangesAsync();
+        }
+
+        public async  Task<int> DeleteAsync(TEntity entity)
+        {
+             context.Set<TEntity>().Remove(entity);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await context.Set<TEntity>().ToListAsync();
+        }
+
+        public async Task<TEntity> GetByIdAsync(int id)
+        {
+            return await context.Set<TEntity>().FindAsync(id);
+        }
+
+        public async Task<int> UpdateAsync( TEntity entity)
+        {
+             context.Set<TEntity>().Update(entity);
+            return await context.SaveChangesAsync();
+        }
     }
 }
