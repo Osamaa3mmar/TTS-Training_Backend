@@ -1,0 +1,14 @@
+﻿using Backend.DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Backend.DAL.Repository.Interfaces
+{
+    public interface IAddressRepository:IGenericRepository<Address>
+    {
+        public Task<Address> GetByUserIdAsync(string id);
+    }
+}

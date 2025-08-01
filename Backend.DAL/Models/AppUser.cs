@@ -13,6 +13,6 @@ namespace Backend.DAL.Models
 
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
+        public Address Address { get; set; }
     }
 }
