@@ -12,5 +12,8 @@ namespace Backend.BLL.Services.Interfaces
     public  interface IProductService:IGenericService<Product,ProductRequest,ProductResponse>
     {
 
+
+
+        Task<bool> ChangeQuatityById(int id, int quantity);
     }
 }

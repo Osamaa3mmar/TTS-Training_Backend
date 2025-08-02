@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace Backend.DAL.Repository.Interfaces
         Task<int> DeleteAsync(TEntity entity);
         Task<int> UpdateAsync( TEntity entity);
         Task<int> DeleteAllAsync(IEnumerable<TEntity> entities);
+        Task<IDbContextTransaction> StartTransAction(); 
+
     }
 }

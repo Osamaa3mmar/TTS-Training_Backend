@@ -16,9 +16,9 @@ namespace Backend.DAL.Models
     {
         [Required]
         [MaxLength(20)]
-        public string PaymentMethod { get; set; }
+        public string PaymentMethod { get; set; } = "cash";
         [Required]
-        public decimal AmountPaid { get; set; }
+        public decimal AmountPaid { get; set; } = 100;
         [Required]
         public PaymentStatus Status { get; set; } = PaymentStatus.NotConfirmed;
 

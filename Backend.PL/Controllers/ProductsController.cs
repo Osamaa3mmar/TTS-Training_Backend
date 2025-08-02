@@ -67,5 +67,31 @@ namespace Backend.PL.Controllers
         }
 
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
+        {
+
+            var result = await service.DeleteAsync(id);
+            if(result ==0)
+            {
+                return NotFound($"There Is No Product With {id} Id !");
+            }
+
+
+            return Ok(new { message = "Deleted !" });
+        }
+
+        [HttpPatch("SetQuantity/{id}")]
+        public async Task<IActionResult> SetQuantity([FromBody] QuantityChangeRequest quantity, [FromRoute]int id)
+        {
+            var res = await service.ChangeQuatityById(id, quantity.Quantity);
+            if (!res)
+            {
+                return BadRequest("Quantity Could Not Be Changed !");
+            }
+            return Ok(new { message = "Quantity Changed Successfully !" });
+        }
+
+
     }
 }
