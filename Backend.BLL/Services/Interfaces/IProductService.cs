@@ -13,7 +13,7 @@ namespace Backend.BLL.Services.Interfaces
     {
 
 
-
+        
         Task<bool> ChangeQuatityById(int id, int quantity);
     }
 }

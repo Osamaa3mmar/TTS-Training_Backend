@@ -10,6 +10,8 @@ namespace Backend.DAL.DTO.Response
 {
     public class AddressFullResponse:BaseModel
     {
+        public string AppUserId { get; set; }
+
         public string FullName { get; set; }
         public string PhoneNumber { get; set; }
         public string City { get; set; }

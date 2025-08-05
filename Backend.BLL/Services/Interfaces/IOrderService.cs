@@ -14,6 +14,8 @@ namespace Backend.BLL.Services.Interfaces
         public  Task<int> CreateOrderAsync(OrderRequest request);
         public Task<IEnumerable<OrderResponse>> GetAllAsync();
         public Task<OrderFullResponse> GetOrderDetailsById(int id);
+        public Task<IEnumerable<OrderResponse>> GetOrdersByUserIdAsync(string id);
 
+        public Task<int> ChangeOrderStatusAsync (int id, OrderStatus status);
     }
 }

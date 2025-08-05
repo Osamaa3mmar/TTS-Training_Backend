@@ -24,6 +24,12 @@ namespace Backend.BLL.Services.Classes
             this.productRepo = productRepo;
         }
 
+        public async Task<int> ChangeOrderStatusAsync(int id, OrderStatus status)
+        {
+            var order = await repo.GetByIdAsync(id);
+            order.Status =status;
+            return await repo.UpdateAsync(order);
+        }
 
         public async Task<int> CreateOrderAsync(OrderRequest request)
         {
@@ -66,7 +72,6 @@ namespace Backend.BLL.Services.Classes
         public async Task<IEnumerable<OrderResponse>> GetAllAsync()
         {
             var orders =await repo.GetAllAsync();
-
             return orders.Adapt<IEnumerable<OrderResponse>>();
         }
 
@@ -83,6 +88,12 @@ namespace Backend.BLL.Services.Classes
             return order.Adapt<OrderFullResponse>();
         }
 
+        public async Task<IEnumerable<OrderResponse>> GetOrdersByUserIdAsync(string id)
+        {
+            var orders = await repo.GetOrdersByUserId(id);
 
+
+            return orders.Adapt<IEnumerable<OrderResponse>>();
+        }
     }
 }

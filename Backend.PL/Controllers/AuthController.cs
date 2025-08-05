@@ -8,11 +8,11 @@ namespace Backend.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IUserService service;
 
-        public UsersController(IUserService service)
+        public AuthController(IUserService service)
         {
             this.service = service;
         }
@@ -21,7 +21,7 @@ namespace Backend.PL.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await service.Register(request);
-            if(result is null)
+            if (result is null)
             {
                 return BadRequest("Registration failed. Please check your input and try again.");
             }
@@ -34,13 +34,21 @@ namespace Backend.PL.Controllers
         {
             LoginResponse res = await service.Login(request);
 
-            if(res is null)
+            if (res.Token == "email")
             {
-            return Unauthorized("Invalid email or password.");
+                return NotFound(new { message = "Email Not Found !" });
+            }
+            else if (res.Token == "password")
+            {
+                return NotFound(new { message = "Invalid Password !" });
+
+            }
+            else if (res is null)
+            {
+                return NotFound(new { message = "Error" });
             }
 
             return Ok(new { Token = res.Token, Message = "Login successful." });
         }
-
     }
 }

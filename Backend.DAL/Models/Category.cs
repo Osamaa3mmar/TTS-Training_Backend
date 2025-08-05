@@ -16,6 +16,6 @@ namespace Backend.DAL.Models
         [MaxLength(255)]
         public string? Description { get; set; }
 
-        ICollection<Product> Products { get; set; }=new List<Product>();
+        public ICollection<Product> Products { get; set; }=new List<Product>();
     }
 }

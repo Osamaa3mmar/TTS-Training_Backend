@@ -31,9 +31,10 @@ namespace Backend.BLL.Services.Classes
                 return false;
             }   
             product.Quantity = quantity;
-                int x=await repo.UpdateAsync(product);
+            product.Status=quantity>0?Status.Active:Status.InActive;
+            int res = await repo.UpdateAsync(product);
 
-            return x>0?true : false;
+            return res>0;
 
         }
     }

@@ -5,16 +5,20 @@ using Backend.DAL.Data;
 using Backend.DAL.Models;
 using Backend.DAL.Repository.Classes;
 using Backend.DAL.Repository.Interfaces;
+using Backend.DAL.Utils;
 using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 
 namespace Backend.PL
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public  static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +29,7 @@ namespace Backend.PL
             builder.Services.AddOpenApi();
 
 
-
+            builder.Services.AddHttpContextAccessor();
 
             //Dep injection
             builder.Services.AddDbContext<ApplicationDbContext>(op=>op.UseSqlServer(builder.Configuration.GetConnectionString("MyConn")));
@@ -36,6 +40,7 @@ namespace Backend.PL
             builder.Services.AddScoped<IAddressRepository, AddressRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IPaymentRepository, PaymentsRepository>();
 
             //services
             builder.Services.AddScoped<ICategoryService,CategoryService>(); 
@@ -43,6 +48,8 @@ namespace Backend.PL
             builder.Services.AddScoped<IAddressService,AddressService>();
             builder.Services.AddScoped<IProductService,ProductService>();
             builder.Services.AddScoped<IOrderService,OrderService>();
+            builder.Services.AddScoped<IPaymentsServices,PaymentServices>();
+            builder.Services.AddScoped<ISeedData,SeedData>();
             builder.Services.AddScoped<FilesUtiles>();
 
 
@@ -53,6 +60,29 @@ namespace Backend.PL
             var cloudinary = new Cloudinary(account);
 
             builder.Services.AddSingleton(cloudinary);
+
+
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt")["SecretKey"]))
+            };
+        });
+
+
+
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -61,6 +91,10 @@ namespace Backend.PL
                 app.MapScalarApiReference();
             }
 
+            var scope =app.Services.CreateScope();
+            var objOfSeedData=scope.ServiceProvider.GetRequiredService<ISeedData>();
+            await objOfSeedData.DataSeedingAsync();
+            await objOfSeedData.IdentityDataSeeding();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

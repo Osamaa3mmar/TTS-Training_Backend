@@ -12,5 +12,6 @@ namespace Backend.DAL.Repository.Interfaces
 
         Task<IEnumerable<Order>> GetAllAsync();
         Task<Order> GetOrderDetailsById(int id);
+        Task<IEnumerable<Order>> GetOrdersByUserId(string id);
     }
 }

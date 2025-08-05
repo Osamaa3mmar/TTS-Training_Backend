@@ -20,7 +20,7 @@ namespace Backend.PL
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(image.FileName, image.OpenReadStream()),
-                Transformation = new Transformation().Crop("scale").Width(500).Height(500).Angle(30)
+                Transformation = new Transformation().Crop("scale").Width(500).Height(500)
             };
             var result = await cloudinary.UploadAsync(uploadParams);
             return result.SecureUrl.ToString();

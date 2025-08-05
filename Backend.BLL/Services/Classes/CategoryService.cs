@@ -20,6 +20,20 @@ namespace Backend.BLL.Services.Classes
             this.categoryRepository = repo;
         }
 
+        public async Task<int> DeleteCategoryAsync(int id)
+        {
+            var res=await categoryRepository.HasProducts(id);
+            if (res)
+            {
+                return 0;
+            }
+            else
+            {
+                var cat=await categoryRepository.GetByIdAsync(id);
+                return await categoryRepository.DeleteAsync(cat);
+            }
+        }
+
         public async Task<CategoryFullResponse> GetFullCategoryAsync(int id)
         {
             var cat = await categoryRepository.GetByIdAsync(id);
@@ -28,6 +42,19 @@ namespace Backend.BLL.Services.Classes
                 return default(CategoryFullResponse);
             }
             return cat.Adapt<CategoryFullResponse>();
+        }
+
+        public async Task<string> ToggleStatusAsync(int id)
+        {
+            var cat= await categoryRepository.GetByIdAsync(id);
+            if (cat == null)
+            {
+                return null;
+            }
+            cat.Status=cat.Status == Status.Active ? Status.InActive : Status.Active;
+
+
+            return await categoryRepository.UpdateAsync(cat) > 0 ? cat.Status.ToString() : null;
         }
     }
 }

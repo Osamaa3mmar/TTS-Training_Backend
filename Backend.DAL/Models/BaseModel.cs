@@ -16,7 +16,7 @@ namespace Backend.DAL.Models
     {
         [Key]
         public int Id { get; set; }
-        public Status Status { get; set; }=Status.Active;
+        public Status Status { get; set; }=Status.InActive;
         public DateTime CreatedAt { get; set; }= DateTime.Now;
     }
 }

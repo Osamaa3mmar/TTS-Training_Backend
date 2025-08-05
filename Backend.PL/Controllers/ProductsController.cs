@@ -24,7 +24,7 @@ namespace Backend.PL.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById([FromRoute]int id)
         {
-            var product = await service.GetByIdAsync(id);
+            var product = await service.GetByIdAsync(id,true);
 
             if(product == null)
             {
@@ -36,61 +36,15 @@ namespace Backend.PL.Controllers
         [HttpGet("All")]
         public async Task<IActionResult> GetAllCategory()
         {
-            var products = await service.GetAllAsync();
+            var products = await service.GetAllAsync(true);
             return Ok(new { message="Success",products });
         }
-        [HttpPost()]
-        public async Task<IActionResult> CreateProduct([FromForm]ProductFileRequest request)
-        {
-            var imageUrl=await file.UploadImage(request.Image);
-            if (string.IsNullOrEmpty(imageUrl))
-            {
-                return BadRequest();
-            }
-            var productRequest = new ProductRequest
-            {
-                Name = request.Name,
-                Price = request.Price,
-                Quantity = request.Quantity,
-                CategoryId = request.CategoryId,
-                ImageUrl = imageUrl,
-                Description = request.Description
-            };
 
-            int res= await service.AddAsync(productRequest);
-            if (res == 0)
-            {
-            return BadRequest("Product Could Not Be Created !");
-            }
+       
 
-            return Ok(new { message = "Success" });
-        }
+       
 
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
-        {
-
-            var result = await service.DeleteAsync(id);
-            if(result ==0)
-            {
-                return NotFound($"There Is No Product With {id} Id !");
-            }
-
-
-            return Ok(new { message = "Deleted !" });
-        }
-
-        [HttpPatch("SetQuantity/{id}")]
-        public async Task<IActionResult> SetQuantity([FromBody] QuantityChangeRequest quantity, [FromRoute]int id)
-        {
-            var res = await service.ChangeQuatityById(id, quantity.Quantity);
-            if (!res)
-            {
-                return BadRequest("Quantity Could Not Be Changed !");
-            }
-            return Ok(new { message = "Quantity Changed Successfully !" });
-        }
+       
 
 
     }

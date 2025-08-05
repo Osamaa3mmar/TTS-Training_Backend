@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Backend.DAL.Repository.Interfaces
+namespace Backend.DAL.DTO.Request
 {
-    public interface ICategoryRepository:IGenericRepository<Category>
+    public class ChangeOrderStatusRequest
     {
-        Task<bool> HasProducts(int id);
+        public OrderStatus Status { get; set; }
     }
 }

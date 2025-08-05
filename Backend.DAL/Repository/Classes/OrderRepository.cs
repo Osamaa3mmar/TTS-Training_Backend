@@ -21,11 +21,16 @@ namespace Backend.DAL.Repository.Classes
         {
             return await context.Orders.Include(o => o.AppUser).ToListAsync();   
         }
-        public Task<Order> GetOrderDetailsById(int id)
+        public async Task<Order> GetOrderDetailsById(int id)
         {
-            return context.Orders.Include(o => o.AppUser).Include(o => o.OrderDetails).ThenInclude(d=>d.Product).FirstOrDefaultAsync(o=> o.Id==id);
+            var order= await context.Orders.Include(o => o.AppUser).Include(o => o.OrderDetails).ThenInclude(d=>d.Product).FirstOrDefaultAsync(o=> o.Id==id);
+            return order;
         }
 
-
+        public async Task<IEnumerable<Order>> GetOrdersByUserId(string id)
+        {
+            var orders = await context.Orders.Include(o=>o.AppUser).Where(o => o.AppUserId == id).ToListAsync();
+            return orders;
+        }
     }
 }

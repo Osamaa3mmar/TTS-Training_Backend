@@ -1,4 +1,5 @@
 ﻿using Backend.BLL.Services.Interfaces;
+using Backend.DAL.Models;
 using Backend.DAL.Repository.Interfaces;
 using Mapster;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Backend.BLL.Services.Classes
 {
-    public class GenericService<TEntity, TEntityRequest, TEntityResponse> : IGenericService<TEntity, TEntityRequest, TEntityResponse> where TEntity : class
+    public class GenericService<TEntity, TEntityRequest, TEntityResponse> : IGenericService<TEntity, TEntityRequest, TEntityResponse> where TEntity  : BaseModel
     {
         private readonly IGenericRepository<TEntity> repository;
         public GenericService(IGenericRepository<TEntity> repository)
@@ -33,20 +34,27 @@ namespace Backend.BLL.Services.Classes
             return await repository.DeleteAsync(entity);
         }
 
-        public async Task<IEnumerable<TEntityResponse>> GetAllAsync()
+        public async Task<IEnumerable<TEntityResponse>> GetAllAsync(bool active=false)
         {
-            var entities =(await repository.GetAllAsync()).Adapt<IEnumerable<TEntityResponse>>();
-            return entities;
+                var entities = (await repository.GetAllAsync());
+            if (active)
+            {
+                entities = entities.Where(e => e.Status == Status.Active);
+            }
+            return entities.Adapt<IEnumerable<TEntityResponse>>();
         }
 
-        public async Task<TEntityResponse> GetByIdAsync(int id)
+        public async Task<TEntityResponse> GetByIdAsync(int id,bool active=false)
         {
             var entity = await repository.GetByIdAsync(id);
             if(entity == null)
             {
                 return default(TEntityResponse);
             }
-
+            if(active && entity.Status != Status.Active)
+            {
+                return default(TEntityResponse);
+            }
             return entity.Adapt<TEntityResponse>();
         }
 

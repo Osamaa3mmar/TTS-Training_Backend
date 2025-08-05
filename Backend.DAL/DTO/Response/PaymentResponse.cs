@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace Backend.DAL.DTO.Response
 {
-    public class CategorySimpleResponse
+    public class PaymentResponse
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public Status Status { get; set; }
-        public string? Description { get; set; }
+        public string PaymentMethod { get; set; } = "cash";
+        public decimal AmountPaid { get; set; }
+        public PaymentStatus Status { get; set; } = PaymentStatus.NotConfirmed;
+
+        public int OrderId { get; set; }
     }
 }
