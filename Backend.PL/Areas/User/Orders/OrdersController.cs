@@ -29,9 +29,12 @@ namespace Backend.PL.Areas.User.Orders
                 return BadRequest(new { message = "You are not authorized to create this order." });
             }
             var result = await service.CreateOrderAsync(request);
+            if(result == 0)
+            {
+                return BadRequest(new { message = "Order could not be created( Invalid Quantity )." });
+            }
 
-
-            return Ok(result);
+            return Ok(new { message="Order Created !"});
 
         }
         [HttpGet()]

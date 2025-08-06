@@ -22,6 +22,16 @@ namespace Backend.PL.Areas.Admin.Product
             this.service = service;
             this.categoryService = categoryService;
         }
+        [HttpGet]
+        public async Task<IActionResult> GetProductById([FromQuery] int id)
+        {
+            var product = await service.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound($"There Is No Product With {id} Id !");
+            }
+            return Ok(new { message = "Success", product });
+        }
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromForm] ProductFileRequest request)
         {
@@ -56,7 +66,7 @@ namespace Backend.PL.Areas.Admin.Product
                 return BadRequest("Product Could Not Be Created !");
             }
 
-            return Ok(new { message = "Success" });
+            return CreatedAtAction(nameof(GetProductById),new {Message="Created Success !" });
         }
 
 
