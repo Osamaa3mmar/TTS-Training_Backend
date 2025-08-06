@@ -25,7 +25,7 @@ namespace Backend.PL.Controllers
             {
                 return BadRequest("Registration failed. Please check your input and try again.");
             }
-            return Ok(new { Id = result.Id, Message = "Registration successful." });
+            return Ok(new { Id = result.Id, Message = "Registration successful Check Email To Verifiy." });
         }
 
 
@@ -49,6 +49,16 @@ namespace Backend.PL.Controllers
             }
 
             return Ok(new { Token = res.Token, Message = "Login successful." });
+        }
+
+
+
+        [HttpGet("VerifiyEmail")]
+        public async Task<IActionResult> VerifiyEmail([FromQuery] string token, [FromQuery] string userId)
+        {
+            var res=await service.VerifiyEmail(userId, token);
+
+            return Ok(res);
         }
     }
 }

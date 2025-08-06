@@ -12,5 +12,7 @@ namespace Backend.BLL.Services.Interfaces
     {
         Task<RegisterResponse> Register(RegisterRequest request);
         Task<LoginResponse> Login(LoginRequest request);
+
+        Task<string> VerifiyEmail(string userId, string token);
     }
 }

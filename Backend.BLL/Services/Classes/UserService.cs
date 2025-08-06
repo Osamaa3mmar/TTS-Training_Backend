@@ -3,6 +3,7 @@ using Backend.DAL.DTO.Request;
 using Backend.DAL.DTO.Response;
 using Backend.DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -19,9 +20,11 @@ namespace Backend.BLL.Services.Classes
     {
         private readonly UserManager<AppUser> UserManager;
         private readonly IConfiguration configuration;
-        public UserService(UserManager<AppUser> userManager,IConfiguration configuration)
+        private readonly IEmailSender emailSender;
+        public UserService(UserManager<AppUser> userManager,IConfiguration configuration,IEmailSender emailSender)
         {
             this.configuration = configuration;
+            this.emailSender = emailSender;
             this.UserManager = userManager;
         }
         public async Task<RegisterResponse> Register(RegisterRequest request)
@@ -36,6 +39,10 @@ namespace Backend.BLL.Services.Classes
             var roleResult =await UserManager.AddToRoleAsync(user, "User"); 
             if (result.Succeeded)
             {
+                var VerifyToken = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+                var goodToken= Uri.EscapeDataString(VerifyToken);
+                var url = $"https://localhost:7192/api/Auth/VerifiyEmail?userId={user.Id}&token={goodToken}";
+                await emailSender.SendEmailAsync(user.Email,"Test",$"<h2>Hello This Is Test Email</h2> <a href='{url}'>Confirm </a>");
                 return new RegisterResponse()
                 {
                    Id=user.Id
@@ -54,6 +61,11 @@ namespace Backend.BLL.Services.Classes
             if (user == null) {
                 return new LoginResponse() {
                 Token="email"};
+            }
+            var verify = await UserManager.IsEmailConfirmedAsync(user);
+            if (!verify)
+            {
+                throw new Exception("Email Not Verified");
             }
             var result = await UserManager.CheckPasswordAsync(user,request.Password);
             if (!result)
@@ -97,6 +109,24 @@ namespace Backend.BLL.Services.Classes
             return new JwtSecurityTokenHandler().WriteToken(token);
 
 
+        }
+
+        public async Task<string> VerifiyEmail(string userId, string token)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                throw new Exception("User Not Found");
+            }
+            var res = await UserManager.ConfirmEmailAsync(user, token);
+            if (res.Succeeded)
+            {
+                return "Email Verified Successfully";
+            }
+            else
+            {
+                throw new Exception("Email Verification Failed");
+            }
         }
     }
 }

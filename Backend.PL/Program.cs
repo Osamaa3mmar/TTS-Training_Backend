@@ -6,9 +6,11 @@ using Backend.DAL.Models;
 using Backend.DAL.Repository.Classes;
 using Backend.DAL.Repository.Interfaces;
 using Backend.DAL.Utils;
+using Backend.PL.Utils;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -34,7 +36,7 @@ namespace Backend.PL
             //Dep injection
             builder.Services.AddDbContext<ApplicationDbContext>(op=>op.UseSqlServer(builder.Configuration.GetConnectionString("MyConn")));
 
-            builder.Services.AddIdentity<AppUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<AppUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             //repositories
             builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
             builder.Services.AddScoped<IAddressRepository, AddressRepository>();
@@ -51,7 +53,7 @@ namespace Backend.PL
             builder.Services.AddScoped<IPaymentsServices,PaymentServices>();
             builder.Services.AddScoped<ISeedData,SeedData>();
             builder.Services.AddScoped<FilesUtiles>();
-
+            builder.Services.AddScoped<IEmailSender,EmailSetting>();
 
             //Utils
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
