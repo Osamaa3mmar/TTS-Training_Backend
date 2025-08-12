@@ -41,7 +41,7 @@ namespace Backend.BLL.Services.Classes
             {
                 var VerifyToken = await UserManager.GenerateEmailConfirmationTokenAsync(user);
                 var goodToken= Uri.EscapeDataString(VerifyToken);
-                var url = $"https://localhost:7192/api/Auth/VerifiyEmail?userId={user.Id}&token={goodToken}";
+                var url = $"http://localhost:5173/verify?userId={user.Id}&token={goodToken}";
                 await emailSender.SendEmailAsync(user.Email,"Test",$"<h2>Hello This Is Test Email</h2> <a href='{url}'>Confirm </a>");
                 return new RegisterResponse()
                 {

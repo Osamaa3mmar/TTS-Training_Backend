@@ -23,7 +23,7 @@ namespace Backend.PL.Controllers
             var result = await service.Register(request);
             if (result is null)
             {
-                return BadRequest("Registration failed. Please check your input and try again.");
+                return BadRequest("Registration failed. Email allredy in use.");
             }
             return Ok(new { Id = result.Id, Message = "Registration successful Check Email To Verifiy." });
         }
@@ -57,7 +57,6 @@ namespace Backend.PL.Controllers
         public async Task<IActionResult> VerifiyEmail([FromQuery] string token, [FromQuery] string userId)
         {
             var res=await service.VerifiyEmail(userId, token);
-
             return Ok(res);
         }
     }
