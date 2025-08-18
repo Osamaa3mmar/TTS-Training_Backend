@@ -3,6 +3,7 @@ using Backend.DAL.DTO.Request;
 using Backend.DAL.DTO.Response;
 using Backend.DAL.Models;
 using Backend.DAL.Repository.Interfaces;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,24 @@ namespace Backend.BLL.Services.Classes
 
             return res>0;
 
+        }
+
+        public async Task<ICollection<ProductResponse>> GetAllWithCategoryAsync()
+        {
+            var products = await repo.GetAllWithCategoryAsync();
+            return products.Adapt<ICollection<ProductResponse>>();
+        }
+
+        public async Task<bool> ToggleStatusAsync(int id)
+        {
+            var product=await repo.GetByIdAsync(id);
+            if (product == null||product.Quantity<=0)
+            {
+                return false;
+            }
+            product.Status=product.Status==Status.Active?Status.InActive:Status.Active;
+            await repo.UpdateAsync(product);
+            return true;
         }
     }
 }

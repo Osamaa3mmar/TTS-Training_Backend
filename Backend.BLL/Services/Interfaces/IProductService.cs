@@ -15,5 +15,7 @@ namespace Backend.BLL.Services.Interfaces
 
         
         Task<bool> ChangeQuatityById(int id, int quantity);
+        Task<ICollection<ProductResponse>> GetAllWithCategoryAsync();
+        Task<bool> ToggleStatusAsync(int id);
     }
 }

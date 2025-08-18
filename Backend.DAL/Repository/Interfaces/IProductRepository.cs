@@ -9,5 +9,7 @@ namespace Backend.DAL.Repository.Interfaces
 {
     public interface IProductRepository:IGenericRepository<Product>
     {
+        Task<IEnumerable<Product>> GetAllWithCategoryAsync();
+
     }
 }

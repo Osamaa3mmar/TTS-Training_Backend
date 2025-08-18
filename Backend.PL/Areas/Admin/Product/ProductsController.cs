@@ -99,7 +99,7 @@ namespace Backend.PL.Areas.Admin.Product
         [HttpGet("All")]
         public async Task<IActionResult> GetAllCategory()
         {
-            var products = await service.GetAllAsync(false);
+            var products = await service.GetAllWithCategoryAsync();
             return Ok(new { message = "Success", products });
         }
 
@@ -109,7 +109,15 @@ namespace Backend.PL.Areas.Admin.Product
             string imageUrl = "";
             if (request.Image == null)
             {
-            imageUrl=(await service.GetByIdAsync(id)).ImageUrl;
+                var tempProduct = await service.GetByIdAsync(id);
+                if(tempProduct == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "NotFound"
+                    });
+                }
+            imageUrl = tempProduct.ImageUrl;
 
             }
             else
@@ -135,6 +143,19 @@ namespace Backend.PL.Areas.Admin.Product
 
         }
 
+
+        [HttpPatch("toggle/{id}")]
+        public async Task<IActionResult> ToggleProductStatus([FromRoute] int id)
+        {
+
+            var res =await service.ToggleStatusAsync(id);
+            if (res == false)
+            {
+                return NotFound(new { message="Product Quantity is 0 ."});
+            }
+
+            return Ok(new { message="Success"});
+        }
 
 
 

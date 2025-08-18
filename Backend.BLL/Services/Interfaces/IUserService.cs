@@ -14,5 +14,8 @@ namespace Backend.BLL.Services.Interfaces
         Task<LoginResponse> Login(LoginRequest request);
 
         Task<string> VerifiyEmail(string userId, string token);
+
+        Task<ICollection<UserResponse>> getAllWithAddress();
+        
     }
 }
