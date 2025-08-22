@@ -45,6 +45,12 @@ namespace Backend.BLL.Services.Classes
             return products.Adapt<ICollection<ProductResponse>>();
         }
 
+        public async Task<ProductResponse> GetByIdWithCategoryAsync(int id)
+        {
+            var product = await repo.GetByIdWithCategoryAsync(id);
+            return product.Adapt<ProductResponse>();
+        }
+
         public async Task<bool> ToggleStatusAsync(int id)
         {
             var product=await repo.GetByIdAsync(id);

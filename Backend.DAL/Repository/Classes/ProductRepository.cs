@@ -25,6 +25,10 @@ namespace Backend.DAL.Repository.Classes
 
         }
 
-       
+        public async Task<Product> GetByIdWithCategoryAsync(int id)
+        {
+                var product = await context.Products.Include(p => p.Category).FirstOrDefaultAsync(p=> p.Id==id);
+            return product;
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Backend.DAL.Models;
 using Microsoft.AspNetCore;
 
 namespace Backend.DAL.DTO.Request
@@ -16,6 +17,7 @@ namespace Backend.DAL.DTO.Request
         public int Quantity { get; set; }
         public int CategoryId { get; set; }
         public string? ImageUrl { get; set; }
+        public Status Status { get; set; }
         public string? Description { get; set; }
     }
 }

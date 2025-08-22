@@ -24,7 +24,7 @@ namespace Backend.PL.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById([FromRoute]int id)
         {
-            var product = await service.GetByIdAsync(id,true);
+            var product = await service.GetByIdWithCategoryAsync(id);
 
             if(product == null)
             {

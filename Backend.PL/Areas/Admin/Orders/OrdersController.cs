@@ -39,7 +39,15 @@ namespace Backend.PL.Areas.Admin.Orders
             return Ok(new { message = "Order status changed successfully." });
         }
 
+        [HttpGet("Full/{id}")]
+        public async Task<IActionResult> GetOrderFullDetailesById([FromRoute] int id)
+        {
+            var order = await service.GetOrderDetailsById(id);
 
+
+            return Ok(order);
+
+        }
 
 
 
